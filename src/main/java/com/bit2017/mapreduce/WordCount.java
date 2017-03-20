@@ -15,14 +15,25 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import com.sun.org.apache.commons.logging.Log;
+import com.sun.org.apache.commons.logging.LogFactory;
+
 public class WordCount {
 	
-	
+	private static Log log = LogFactory.getLog(WordCount.class);
 	
 	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
-		private Text word = new Text();		
+		private static Text word = new Text();		
 		private static LongWritable one = new LongWritable(1);
 		
+		
+		@Override
+		protected void setup(Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			log.info("--------> map.setup()");
+		}
+
+
 		@Override
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
@@ -34,6 +45,21 @@ public class WordCount {
 				context.write(word, one);
 			}
 		}
+
+
+		@Override
+		protected void cleanup(Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			log.info("--------> cleanup() called");
+		}
+
+		//run은 보통 Override하지 않는다
+		/*@Override
+		public void run(Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			super.run(context);
+		}
+		*/
 	}
 	
 	
