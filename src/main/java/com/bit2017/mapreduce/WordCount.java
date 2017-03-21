@@ -21,50 +21,46 @@ import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 
 public class WordCount {
-	
+
 	private static Log log = LogFactory.getLog(WordCount.class);
-	
+
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
-		private StringWritable word = new StringWritable();		
+		private StringWritable word = new StringWritable();
 		private static NumberWritable one = new NumberWritable(1L);
-		
-		
+
 		@Override
 		protected void setup(Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			log.info("--------> map.setup() called");
 		}
 
-
 		@Override
-		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
+		protected void map(LongWritable key, Text value,
+				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
-			
+
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,|()<> ''");
-			while(tokenizer.hasMoreTokens()){
+			while (tokenizer.hasMoreTokens()) {
 				word.set(tokenizer.nextToken().toLowerCase());
 				context.write(word, one);
 			}
 		}
 
-
 		@Override
 		protected void cleanup(Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			log.info("--------> cleanup() called");
+			// run은 보통 Override하지 않는다
+			/*
+			 * @Override public void run(Mapper<LongWritable, Text, Text,
+			 * LongWritable>.Context context) throws IOException,
+			 * InterruptedException { super.run(context); }
+			 */
 		}
-
-		//run은 보통 Override하지 않는다
-		/*@Override
-		public void run(Mapper<LongWritable, Text, Text, LongWritable>.Context context)
-				throws IOException, InterruptedException {
-			super.run(context);
-		}
-		*/
 	}
-	
-	
+
+
 	public static class MyReducer extends Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable> {
 		
 		private NumberWritable sumWritable = new NumberWritable();
@@ -77,8 +73,10 @@ public class WordCount {
 				sum += value.get();
 			}
 			sumWritable.set(sum);
+			
 			context.write(key, sumWritable);
 		
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -109,6 +107,5 @@ public class WordCount {
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		//실행.
 		job.waitForCompletion(true);
-		}
 	}
 }
