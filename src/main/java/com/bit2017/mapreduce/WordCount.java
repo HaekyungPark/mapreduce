@@ -93,6 +93,7 @@ public class WordCount {
 		
 		//4. 출력 키 타입
 		job.setMapOutputKeyClass( StringWritable.class );
+		
 		//5. 출력 value 타입
 		job.setMapOutputValueClass(NumberWritable.class);
 		
@@ -100,6 +101,8 @@ public class WordCount {
 		job.setInputFormatClass(TextInputFormat.class);
 		//7. 출력 파일 포멧 지정(생략 가능)
 		job.setOutputFormatClass(TextOutputFormat.class);
+		
+		job.setNumReduceTasks(2);
 		
 		//8.입력 파일 이름 저장
 		FileInputFormat.addInputPath(job, new Path(args[0]));
