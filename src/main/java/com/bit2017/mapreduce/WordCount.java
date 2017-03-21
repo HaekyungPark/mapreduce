@@ -94,7 +94,7 @@ public class WordCount {
 		job.setReducerClass(MyReducer.class);
 		
 		//4. 출력 키 타입
-		job.setOutputKeyClass( StringWritable.class );
+		job.setMapOutputKeyClass( StringWritable.class );
 		//5. 출력 value 타입
 		job.setMapOutputValueClass(NumberWritable.class);
 		
