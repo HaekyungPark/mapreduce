@@ -35,7 +35,7 @@ public class NumberWritable implements Writable {
 		WritableUtils.writeVLong(out, number);
 	}
 	public String toString(){
-		return String.valueOf(false);
+		return String.valueOf(number);
 	}
 
 }
