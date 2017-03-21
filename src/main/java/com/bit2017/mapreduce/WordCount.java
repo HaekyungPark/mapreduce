@@ -73,7 +73,7 @@ public class WordCount {
 				sum += value.get();
 			}
 			sumWritable.set(sum);
-			context.getCounter("MyCounter","TestCount").increment(sum);
+			context.getCounter("Word Status", "Count of all Words").increment(sum);
 			context.write(key, sumWritable);
 		
 		}
