@@ -1,4 +1,4 @@
-package com.bit2017.mapreduce;
+package com.bit2017.mapreduce.wordcount;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -20,7 +20,7 @@ import com.bit2017.mapreduce.io.StringWritable;
 import com.sun.org.apache.commons.logging.Log;
 import com.sun.org.apache.commons.logging.LogFactory;
 
-public class WordCount2 {
+public class WordCount3 {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
 
@@ -98,6 +98,7 @@ public class WordCount2 {
 		// 출력 value 타입
 		job.setMapOutputValueClass(NumberWritable.class);
 		
+	
 		// 입력 파일 포멧 지정(생략 가능)
 		job.setInputFormatClass(KeyValueTextInputFormat .class);
 		// 출력 파일 포멧 지정(생략 가능)
