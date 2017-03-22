@@ -46,10 +46,10 @@ public class CountCitation {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration(); 
-		Job job = new Job(conf , "WordCount");
+		Job job = new Job(conf , "CountCitation");
 		
 		//1. Job Instance 초기화 작업
-		job.setJarByClass(WordCount.class);
+		job.setJarByClass(CountCitation.class);
 		
 		//2. MapperClass 지정
 		job.setMapperClass(MyMapper.class);
@@ -66,8 +66,6 @@ public class CountCitation {
 		job.setInputFormatClass(KeyValueTextInputFormat.class);
 		//7. 출력 파일 포멧 지정(생략 가능)
 		job.setOutputFormatClass(TextOutputFormat.class);
-		
-		job.setNumReduceTasks(2);
 		
 		//8.입력 파일 이름 저장
 		FileInputFormat.addInputPath(job, new Path(args[0]));
