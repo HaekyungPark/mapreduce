@@ -118,8 +118,6 @@ public class TopN {
 		//7. 출력 파일 포멧 지정(생략 가능)
 		job.setOutputFormatClass(TextOutputFormat.class);
 		
-		job.setNumReduceTasks(2);
-		
 		//8.입력 파일 이름 저장
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		//9. 출력 파일 이름 저장
