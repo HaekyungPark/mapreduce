@@ -68,7 +68,7 @@ public class WordCount3 {
 		job.setReducerClass(MyReducer.class);
 		
 		// 컴바이너 세팅
-//		job.setCombinerClass(MyReducer.class);
+		job.setCombinerClass(MyReducer.class);
 		// 출력 키 타입
 		job.setMapOutputKeyClass( Text.class );
 		// 출력 value 타입
@@ -80,6 +80,7 @@ public class WordCount3 {
 		// 출력 파일 포멧 지정(생략 가능)
 		job.setOutputFormatClass(TextOutputFormat.class);
 		
+		job.setNumReduceTasks(2);
 		//입력 파일 이름 저장
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		// 출력 파일 이름 저장
