@@ -1,4 +1,4 @@
-package com.bit2017.mapreduce.test.pq;
+package com.bit2017.mapreduce.topn;
 
 import java.util.Comparator;
 

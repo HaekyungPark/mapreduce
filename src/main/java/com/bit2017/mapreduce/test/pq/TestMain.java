@@ -1,21 +1,23 @@
 package com.bit2017.mapreduce.test.pq;
 
-import java.util.PriorityQueue;
-
 public class TestMain {
 
 	public static void main(String[] args) {
-		PriorityQueue<String> pq = new PriorityQueue<String>(10, new StringComparator());
-	
-		pq.add("hello");
-		pq.add("Hello World");
-		pq.add("hi");
-		pq.add("asdfggh");
-		
-		while( pq.isEmpty() == false){
-			String s = pq.remove();
-			System.out.println(s);
+		String str = "helloslkhellodjladfjhello";
+		String findStr = "hello";
+		int lastIndex = 0;
+		int count = 0;
+
+		while (lastIndex != -1) {
+		    lastIndex = str.indexOf(findStr,lastIndex);
+
+		    if( lastIndex != -1)
+		        count++;
+
+		    lastIndex += findStr.length();
 		}
+
+		System.out.println(count);
 	}
 
 }
