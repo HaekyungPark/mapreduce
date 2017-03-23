@@ -5,7 +5,6 @@ import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -13,24 +12,21 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import com.bit2017.mapreduce.topn.TopN;
-import com.bit2017.mapreduce.wordcount.WordCount;
-
 public class CountTrigram {
-	public static class MyMapper extends Mapper<Text, Text, Text, IntWritable> {
-		private final static IntWritable one = new IntWritable(1);
+	public static class MyMapper extends Mapper<Text, Text, Text, LongWritable> {
+		private final static LongWritable one = new LongWritable(1L);
 		private Text trigram = new Text();
 
 		@Override
-		protected void map(Text key, Text value, Mapper<Text, Text, Text, IntWritable>.Context context)
+		protected void map(Text key, Text value, Mapper<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
-			if (tokenizer.countTokens() >= 3) {
+			if (tokenizer.countTokens() <= 2) {
 				String firstWord = tokenizer.nextToken();
 				String secondWord = tokenizer.nextToken();
 
@@ -46,17 +42,17 @@ public class CountTrigram {
 		}
 	}
 
-	public static class MyReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
 
 		@Override
-		protected void reduce(Text key, Iterable<IntWritable> values,
-				Reducer<Text, IntWritable, Text, IntWritable>.Context context)
+		protected void reduce(Text key, Iterable<LongWritable> values,
+				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			int sum = 0;
-			for (IntWritable value : values) {
+			for (LongWritable value : values) {
 				sum += value.get();
 			}
-			context.write(key, new IntWritable(sum));
+			context.write(key, new LongWritable(sum));
 		}
 	}
 
@@ -77,7 +73,7 @@ public class CountTrigram {
 		//4. 출력 키 타입
 		job.setOutputKeyClass( Text.class );
 		//5. 출력 value 타입
-		job.setOutputValueClass(IntWritable.class);
+		job.setOutputValueClass(LongWritable.class);
 		
 		//6. 입력 파일 포멧 지정(생략 가능)
 		job.setInputFormatClass(KeyValueTextInputFormat.class);
