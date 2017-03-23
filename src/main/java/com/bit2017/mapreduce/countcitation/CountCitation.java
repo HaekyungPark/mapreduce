@@ -85,9 +85,9 @@ public class CountCitation {
 		job2.setJarByClass(TopN.class);
 		
 		//2. MapperClass 지정
-		job2.setMapperClass(MyMapper.class);
+		job2.setMapperClass(TopN.MyMapper.class);
 		//3. ReducerClass 지정
-		job2.setReducerClass(MyReducer.class);
+		job2.setReducerClass(TopN.MyReducer.class);
 		
 		//4. 출력 키 타입
 		job2.setMapOutputKeyClass( Text.class );
