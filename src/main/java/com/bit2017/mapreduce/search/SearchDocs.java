@@ -4,16 +4,19 @@ import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import com.bit2017.mapreduce.join.JoinIdTitle;
+import com.bit2017.mapreduce.topn.TopN;
 
 public class SearchDocs {
 	public static class TitleDocIdMapper extends Mapper<Text, Text, Text, Text> {
@@ -21,6 +24,7 @@ public class SearchDocs {
 		protected void map(Text key, Text value, Mapper<Text, Text, Text, Text>.Context context)
 				throws IOException, InterruptedException {
 			context.write( value, new Text( key + "\t" + 1 ) );
+			context.getCounter("Status","Number of Title+DocID").increment(1);
 		}
 	}
 	
@@ -29,6 +33,7 @@ public class SearchDocs {
 		protected void map(Text key, Text value, Mapper<Text, Text, Text, Text>.Context context)
 				throws IOException, InterruptedException {
 			context.write(key, new Text( value + "\t" + 2 ));
+			context.getCounter("status","DocID+Citation").increment(1);
 		}
 	}
 
@@ -74,6 +79,9 @@ public class SearchDocs {
 		final String DOCID_CITECOUNT = args[1];
 		final String OUTPUT_DIR = args[2];
 		
+		if (TITLE_DOCID == null || DOCID_CITECOUNT == null || OUTPUT_DIR == null) {
+			 throw new IllegalArgumentException("Missing Parameters");
+			 }
 		//ReducerClass 지정
 		job.setReducerClass(JobIdTitleReducer.class);
 		
@@ -81,15 +89,34 @@ public class SearchDocs {
 		MultipleInputs.addInputPath(job, new Path(TITLE_DOCID), KeyValueTextInputFormat.class, TitleDocIdMapper.class);
 		MultipleInputs.addInputPath(job, new Path(DOCID_CITECOUNT), KeyValueTextInputFormat.class, DocIdCiteCountMapper.class);
 		//출력관련
-		job.setMapOutputKeyClass( Text.class );
-		
-		job.setMapOutputValueClass(Text.class);
+		job.setOutputKeyClass( Text.class );
+		job.setOutputValueClass(Text.class);
 		
 		job.setOutputFormatClass(TextOutputFormat.class);
 		
 		FileOutputFormat.setOutputPath(job, new Path(OUTPUT_DIR));
 		
-		//실행.
-		job.waitForCompletion(true);
-	}
+		
+		if(!job.waitForCompletion(true))
+			System.exit(1);
+		
+		Configuration conf2 = new Configuration();
+		Job job2 = new Job(conf2, "TopN");
+		
+		job2.setJarByClass(TopN.class);
+		job2.setOutputKeyClass(Text.class);
+		job2.setOutputValueClass(LongWritable.class);
+		
+		job2.setMapperClass(TopN.MyMapper.class);
+		job2.setReducerClass(TopN.MyReducer.class);
+		
+		job2.setInputFormatClass(KeyValueTextInputFormat.class);
+		job2.setOutputFormatClass(TextOutputFormat.class);
+		
+		// input of Job2 is output of Job
+		FileInputFormat.addInputPath(job2, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/topN"));
+		job2.getConfiguration().setInt("topN", 10);
+		job2.waitForCompletion(true);
+		}
 }
