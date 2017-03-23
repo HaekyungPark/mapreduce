@@ -35,7 +35,7 @@ public class CountCitation {
 		@Override
 		protected void reduce(Text key, Iterable<LongWritable> values,
 				Reducer<Text, LongWritable, Text, LongWritable>.Context context) throws IOException, InterruptedException {
-			long sum = 0;
+			long sum = 0L;
 			for( LongWritable value : values){
 				sum += value.get();
 			}
