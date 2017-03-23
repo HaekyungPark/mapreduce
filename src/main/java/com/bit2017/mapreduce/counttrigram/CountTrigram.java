@@ -85,7 +85,7 @@ public class CountTrigram {
 		//9. 출력 파일 이름 저장
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		//실행.
-		if(!job.waitForCompletion(true))
+		if(job.waitForCompletion(true))
 			return;
 		
 		Configuration conf2 = new Configuration();
@@ -106,7 +106,7 @@ public class CountTrigram {
 		FileInputFormat.addInputPath(job2, new Path(args[1]));
 		FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/topN"));
 		job2.getConfiguration().setInt("topN", 10);
-		if (!job2.waitForCompletion(true))
+		if (job2.waitForCompletion(true))
 			return;
 	}
 }
