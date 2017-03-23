@@ -27,18 +27,20 @@ public class CountTrigram {
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
 			if (tokenizer.countTokens() <= 2) {
+				return;
+			}
 				String firstWord = tokenizer.nextToken();
 				String secondWord = tokenizer.nextToken();
 
-				while (tokenizer.hasMoreTokens()) {
-					String thirdWord = tokenizer.nextToken();
-					trigram.set(firstWord + "" + secondWord + "" + thirdWord);
-					context.write(trigram, one);
+			while (tokenizer.hasMoreTokens()) {
+				String thirdWord = tokenizer.nextToken();
+				trigram.set(firstWord + "" + secondWord + "" + thirdWord);
+				context.write(trigram, one);
 
-					firstWord = secondWord;
-					secondWord = thirdWord;
-				}
+				firstWord = secondWord;
+				secondWord = thirdWord;
 			}
+		
 		}
 	}
 
