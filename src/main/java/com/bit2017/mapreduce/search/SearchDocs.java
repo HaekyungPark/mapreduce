@@ -56,7 +56,6 @@ public class SearchDocs {
 				}else if ("2".equals(tokens[1])){
 					v.set(tokens[0]);
 				}
-				
 				count++;
 			}
 			//출력
@@ -69,10 +68,10 @@ public class SearchDocs {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration(); 
-		Job job = new Job(conf , "Join Id & Title");
+		Job job = new Job(conf , "SearchDocs");
 		
 		//Job Instance 초기화 작업
-		job.setJarByClass(JoinIdTitle.class);
+		job.setJarByClass(SearchDocs.class);
 		
 		//파라미터 저장
 		final String TITLE_DOCID =args[0];
@@ -81,7 +80,7 @@ public class SearchDocs {
 		
 		if (TITLE_DOCID == null || DOCID_CITECOUNT == null || OUTPUT_DIR == null) {
 			 throw new IllegalArgumentException("Missing Parameters");
-			 }
+		}
 		//ReducerClass 지정
 		job.setReducerClass(JobIdTitleReducer.class);
 		
