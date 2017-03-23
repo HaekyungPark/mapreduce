@@ -34,7 +34,7 @@ public class CountTrigram {
 
 			while (tokenizer.hasMoreTokens()) {
 				String thirdWord = tokenizer.nextToken();
-				trigram.set(firstWord + "" + secondWord + "" + thirdWord);
+				trigram.set(firstWord + " " + secondWord + " " + thirdWord);
 				context.write(trigram, one);
 
 				firstWord = secondWord;
