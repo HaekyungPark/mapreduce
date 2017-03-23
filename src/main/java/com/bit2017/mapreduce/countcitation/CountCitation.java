@@ -79,35 +79,24 @@ public class CountCitation {
 		if(!job.waitForCompletion(true))
 			return;
 		
-		Job job2 = new Job(conf , "TopN");
+		Configuration conf2 = new Configuration();
+		Job job2 = new Job(conf2, "TopN");
 		
-		//1. Job Instance 초기화 작업
 		job2.setJarByClass(TopN.class);
+		job2.setOutputKeyClass(Text.class);
+		job2.setOutputValueClass(LongWritable.class);
 		
-		//2. MapperClass 지정
 		job2.setMapperClass(TopN.MyMapper.class);
-		//3. ReducerClass 지정
 		job2.setReducerClass(TopN.MyReducer.class);
 		
-		//4. 출력 키 타입
-		job2.setMapOutputKeyClass( Text.class );
-		
-		//5. 출력 value 타입
-		job2.setMapOutputValueClass(LongWritable.class);
-		
-		//6. 입력 파일 포멧 지정(생략 가능)
 		job2.setInputFormatClass(KeyValueTextInputFormat.class);
-		//7. 출력 파일 포멧 지정(생략 가능)
 		job2.setOutputFormatClass(TextOutputFormat.class);
 		
-		//8.입력 파일 이름 저장
-		FileInputFormat.addInputPath(job2, new Path(args[0]));
-		//9. 출력 파일 이름 저장
-		FileOutputFormat.setOutputPath(job2, new Path(args[1]+"/topn"));
-		//10. N 파라미터
-		job2.getConfiguration().setInt("topN",10);
-		//실행.
+		// input of Job2 is output of Job
+		FileInputFormat.addInputPath(job2, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/topN"));
+		job2.getConfiguration().setInt("topN", 10);
 		job2.waitForCompletion(true);
-	
+			
 	}
 }
