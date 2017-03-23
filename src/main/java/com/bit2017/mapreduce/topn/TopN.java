@@ -15,6 +15,10 @@ import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import com.bit2017.mapreduce.countcitation.CountCitation;
+import com.bit2017.mapreduce.countcitation.CountCitation.MyMapper;
+import com.bit2017.mapreduce.countcitation.CountCitation.MyReducer;
+
 
 public class TopN {
 	
