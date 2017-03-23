@@ -105,7 +105,7 @@ public class CountCitation {
 		//9. 출력 파일 이름 저장
 		FileOutputFormat.setOutputPath(job2, new Path(args[1]+"/topn"));
 		//10. N 파라미터
-		job2.getConfiguration().setInt("topN", Integer.parseInt(args[2]));
+		job2.getConfiguration().setInt("topN",10);
 		//실행.
 		job2.waitForCompletion(true);
 	
