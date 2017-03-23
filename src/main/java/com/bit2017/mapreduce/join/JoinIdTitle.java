@@ -42,7 +42,7 @@ public class JoinIdTitle {
 				String info = value.toString();
 				String[] tokens = info.split("\t");
 				if(tokens.length == 2){
-					break;
+					
 				}
 				if("1".equals(tokens[1])){
 					k.set(tokens[0] + "[" + key.toString() + "]");
