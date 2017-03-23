@@ -99,7 +99,6 @@ public class CountTrigram {
 		
 		job2.setMapperClass(TopN.MyMapper.class);
 		job2.setReducerClass(TopN.MyReducer.class);
-		job2.setNumReduceTasks(1);
 		
 		job2.setInputFormatClass(KeyValueTextInputFormat.class);
 		job2.setOutputFormatClass(TextOutputFormat.class);
