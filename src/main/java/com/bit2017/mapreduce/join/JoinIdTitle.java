@@ -48,9 +48,8 @@ public class JoinIdTitle {
 					k.set(tokens[0] + "[" + key.toString() + "]");
 				}else if ("2".equals(tokens[1])){
 					v.set(tokens[0]);
-				}else{
-					continue;
 				}
+				
 				count++;
 			}
 			//출력
