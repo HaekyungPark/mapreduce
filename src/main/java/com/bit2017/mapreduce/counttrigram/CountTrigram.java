@@ -108,7 +108,7 @@ public class CountTrigram {
 		FileInputFormat.addInputPath(job2, new Path(args[1]));
 		FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/topN"));
 		job2.getConfiguration().setInt("topN", 10);
-		if (job2.waitForCompletion(true))
-			return;
+		job2.waitForCompletion(true);
+			
 	}
 }
