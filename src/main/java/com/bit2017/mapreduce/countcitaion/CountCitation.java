@@ -1,4 +1,4 @@
-package com.bit2017.mapreduce.wordcount;
+package com.bit2017.mapreduce.countcitaion;
 
 import java.io.IOException;
 
