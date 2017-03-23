@@ -58,7 +58,7 @@ public class CountTrigram {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration(); 
-		Job job = new Job(conf , "CountTrigram");
+		Job job = new Job(conf, "CountTrigram");
 		
 		//1. Job Instance 초기화 작업
 		job.setJarByClass(CountTrigram.class);
@@ -104,7 +104,7 @@ public class CountTrigram {
 		
 		// input of Job2 is output of Job
 		FileInputFormat.addInputPath(job2, new Path(args[1]));
-		FileOutputFormat.setOutputPath(job2, new Path(args[1] + "//topN"));
+		FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/topN"));
 		job2.getConfiguration().setInt("topN", 10);
 		if (!job2.waitForCompletion(true))
 			return;
