@@ -48,7 +48,6 @@ public class InvertedIndex1 {
 				sb.append(docId.toString());
 			}
 			context.write(word, new Text(sb.toString()));
-		
 		}
 	}
 
@@ -63,7 +62,8 @@ public class InvertedIndex1 {
 		job.setMapperClass(MyMapper.class);
 		// ReducerClass 지정
 		job.setReducerClass(MyReducer.class);
-		
+		// 리듀스 개수 지정
+		job.setNumReduceTasks(10);
 		// map 출력 키 타입
 		job.setMapOutputKeyClass( Text.class );
 		// map 출력 value 타입
