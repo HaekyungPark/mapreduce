@@ -1,0 +1,89 @@
+package com.bit2017.mapreduce.index;
+
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+
+public class InvertedIndex1 {
+
+	public static class MyMapper extends Mapper<Text, Text, Text, Text> {
+		private Text word = new Text();
+		@Override
+		protected void map(Text docId, Text contents,
+				Mapper<Text, Text, Text, Text>.Context context)
+				throws IOException, InterruptedException {
+
+			String line = contents.toString();
+			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,|()<> ''");
+			while (tokenizer.hasMoreTokens()) {
+				word.set(tokenizer.nextToken().toLowerCase());
+				context.write(word, docId);
+			}
+		}
+	}
+
+
+	public static class MyReducer extends Reducer<Text, Text, Text, Text> {
+		
+		@Override
+		protected void reduce(Text word, Iterable<Text> docIds,
+				Reducer<Text, Text, Text, Text>.Context context) throws IOException, InterruptedException {
+			StringBuilder sb = new StringBuilder();
+			boolean isFirst = true;
+			for( Text docId : docIds){
+				if( isFirst == false ){
+					sb.append(",");
+				}
+				sb.append(docId.toString());
+			}
+			context.write(word, new Text(sb.toString()));
+		
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		Configuration conf = new Configuration(); 
+		Job job = new Job(conf , "Inverted Index 1");
+		
+		// Job Instance 초기화 작업
+		job.setJarByClass(InvertedIndex1.class);
+		
+		// MapperClass 지정
+		job.setMapperClass(MyMapper.class);
+		// ReducerClass 지정
+		job.setReducerClass(MyReducer.class);
+		
+		// map 출력 키 타입
+		job.setMapOutputKeyClass( Text.class );
+		// map 출력 value 타입
+		job.setMapOutputValueClass( Text.class );
+		
+		// reduce 출력 키 타입
+		job.setOutputKeyClass( Text.class );
+		// reduce 출력 value 타입
+		job.setOutputValueClass( Text.class );
+
+		// 입력 파일 포멧 지정(생략 가능)
+		job.setInputFormatClass(KeyValueTextInputFormat.class);
+		// 출력 파일 포멧 지정(생략 가능)
+		job.setOutputFormatClass(TextOutputFormat.class);
+		
+		// 입력 파일 이름 저장
+		FileInputFormat.addInputPath(job, new Path(args[0]));
+		// 출력 파일 이름 저장
+		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		// 실행
+		job.waitForCompletion(true);
+	}
+}
